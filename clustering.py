@@ -72,7 +72,7 @@ def cluster(df_mean_color, n_clusters=3):
     return df_mean_color
 
 
-def segment(image, df_mean_color, contours, filename):
+def segment(image, df_mean_color, contours, filename, iterator):
     img = image.copy()
     for label, df_grouped in df_mean_color.groupby("label"):
         masked_image = draw_segmented_objects(image, contours, df_grouped.index)
@@ -109,21 +109,7 @@ def segment(image, df_mean_color, contours, filename):
     cv2.imwrite(f"results/clustered/segmented_{filename}.png", img)
 
 
-if __name__ == "__main__":
-    # take first element in argv as image path
-
-    if len(sys.argv) != 2:
-        print("Incorrect number of arguments")
-        sys.exit(1)
-
-    image_path = sys.argv[1]
-    filename = os.path.basename(image_path)
-
-    image = cv2.imread(image_path, cv2.IMREAD_UNCHANGED)
-    # image = cv2.imread(
-    #    r"C:\Users\abzdel\Desktop\projects\rainforest\frames6\frame_1282.8069963948042.png",
-    #    cv2.IMREAD_UNCHANGED,
-    # )  # method 3 experiments section figure 3
+def process_single_image(image, iterator):
 
     contours, _ = find_contours(image)
 
@@ -135,4 +121,58 @@ if __name__ == "__main__":
 
     # segmentation step
     # passing in filtered contours gives list index out of range error
-    segment(image, df_mean_color, contours, filename)
+    segment(image, df_mean_color, contours, filename, iterator=0)
+
+def process_folder(folder):
+    iterator = 0
+
+    for filename in os.listdir(folder):
+        image_path = os.path.join(folder, filename)
+        image = cv2.imread(image_path, cv2.IMREAD_UNCHANGED)
+        process_single_image(image, iterator=iterator)
+        iterator +=1
+
+def get_filetype(filename):
+    """Determines the type of a given file
+    If the file is am image, it returns the image type
+    If the file is a directory, it returns dir"""
+
+    if os.path.isdir(filename):
+        return "dir"
+    elif os.path.isfile(filename):
+        # split filename then return after .
+        print(f"filetype is: {filename[-4:]}")
+        return filename[-4:]
+    else:
+        return None
+
+
+if __name__ == "__main__":
+    # take first element in argv as image path
+    if len(sys.argv) != 2:
+        print("Incorrect number of arguments")
+        sys.exit(1)
+
+    image_path = sys.argv[1]
+    filename = os.path.basename(image_path)
+
+    # If a file is passed as an argument, get the file type. Will help us know what to do with the file
+    if image_path:
+        filetype = get_filetype(filename)
+        print("makes it here")
+
+        if filetype is None:
+            #print("File does not exist or file of wrong type passed")
+            #sys.exit(1)
+            pass
+
+        #print(sys.argv[1])  # debug
+        #print(filetype)  # debug
+
+
+    image = cv2.imread(image_path, cv2.IMREAD_UNCHANGED)
+    # image = cv2.imread(
+    #    r"C:\Users\abzdel\Desktop\projects\rainforest\frames6\frame_1282.8069963948042.png",
+    #    cv2.IMREAD_UNCHANGED,
+    # )  # method 3 experiments section figure 3
+
