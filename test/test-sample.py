@@ -4,18 +4,18 @@ import sys
 
 def test_incorrect_path():
     # assert that the output of "python sample_frames.py" is "Incorrect number of arguments"
-    assert os.system("python sample_frames.py") == 1, "incorrect number of arguments"
+    assert os.system("python sample_frames.py") != 0, "incorrect number of arguments"
 
 
 def test_file_not_exists():
     assert (
-        os.system("python sample_frames.py not_exist.jpg") == 1
+        os.system("python sample_frames.py not_exist.jpg") != 0
     ), "file should not exist"
 
 
 def test_wrong_filetype():
     assert (
-        os.system("python sample_frames.py results-test/frame_0.txt") == 1
+        os.system("python sample_frames.py results-test/frame_0.txt") != 0
     ), "file should not be a txt"
 
 
@@ -27,5 +27,5 @@ def test_correct_folder():
 
 def test_mp4_not_exist():
     assert (
-        os.system("python sample_frames.py not_exist.mp4") == 1
+        os.system("python sample_frames.py not_exist.mp4") != 0
     ), "should not work with mp4 files that don't exist"

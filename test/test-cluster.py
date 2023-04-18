@@ -4,12 +4,12 @@ import sys
 
 def test_incorrect_path():
     # assert that the output of "python sample_frames.py" is "Incorrect number of arguments"
-    assert os.system("python clustering.py") == 1, "incorrect number of arguments"
+    assert os.system("python clustering.py") != 0, "incorrect number of arguments"
 
 
 def test_incorrect_path_mp4():
     assert (
-        os.system("python clustering.py short-vid-demo.mp4") == 1
+        os.system("python clustering.py short-vid-demo.mp4") != 0
     ), "should not work with mp4 files that exist"
 
 

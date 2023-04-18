@@ -5,11 +5,15 @@ install:
 
 format:
 	black *.py
-
-test:
-	python -m pytest -vv test/test-*.py
+	black test/*.py
 
 lint:
 	pylint --disable=R,C *.py
+	pylint --disable=R,C test/*.py
 
-all: install test format lint
+check:
+	pytest test/test-sample.py
+	pytest test/test-cluster.py
+
+
+all: install format lint check
