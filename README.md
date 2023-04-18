@@ -1,6 +1,14 @@
 # Algorithmic Rainforest Image Analysis
 Sampling and algorithmic analysis of rainforest drone videos. For Rainforest Engineering class at Duke University.
 
+# Architectural Diagram - Frame Sampling
+![frame sampling program drawio](https://user-images.githubusercontent.com/55398496/232870522-3984e84a-da30-4487-9fdc-be6cbdaf7c63.png)
+
+
+# Architectural Diagram - Clustering
+
+![color segmentation diagram drawio](https://user-images.githubusercontent.com/55398496/232870532-bed17fa2-62d4-499f-9ba4-86d59b974ad8.png)
+
 
 # How to Run the App
 
