@@ -1,3 +1,5 @@
+[![Makefile CI](https://github.com/abzdel/rainforest_image_analysis/actions/workflows/makefile.yml/badge.svg)](https://github.com/abzdel/rainforest_image_analysis/actions/workflows/makefile.yml)
+
 # Algorithmic Rainforest Image Analysis
 Sampling and algorithmic analysis of rainforest drone videos. For Rainforest Engineering class at Duke University.
 
