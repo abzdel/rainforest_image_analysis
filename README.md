@@ -1,4 +1,4 @@
-# rainforest_image_analysis
+# Algorithmic Rainforest Image Analysis
 Sampling and algorithmic analysis of rainforest drone videos. For Rainforest Engineering class at Duke University.
 
 
@@ -27,9 +27,5 @@ python sample_frames.py {video or folder of videos}
 
 Or, if we only want to run clustering on our already sampled frames
 ```python
-python clustering.py {path to image}
+python clustering.py {path to image or folder of images}
 ```
-
-
-<br>
-After this, we simply select the matchup we want and get our predicted total score (score from both teams combined)
