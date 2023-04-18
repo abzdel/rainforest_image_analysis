@@ -131,3 +131,6 @@ dmypy.json
 
 # videos cant be stored
 *.MP4
+
+# results folder
+/results

@@ -93,6 +93,10 @@ def segment(image, df_mean_color, contours, filename, iterator):
         print(f"mean value: {mean_value}")
         if mean_value > 50:
             print("Good image detected - saving.")
+            # export image
+            cv2.imwrite(f"results/clustered/segmented_{filename}.png", img)
+            # if we detect one good segment, we dont need to look at the others
+            break
 
         else:
             print("Bad image detected.")
@@ -105,8 +109,6 @@ def segment(image, df_mean_color, contours, filename, iterator):
     # increase size of image variable
     plt.figure(figsize=(20, 20))
 
-    # export image
-    cv2.imwrite(f"results/clustered/segmented_{filename}.png", img)
 
 
 def process_single_image(image, iterator):
@@ -126,8 +128,8 @@ def process_single_image(image, iterator):
 def process_folder(folder):
     iterator = 0
 
-    for filename in os.listdir(folder):
-        image_path = os.path.join(folder, filename)
+    for f in os.listdir(folder):
+        image_path = os.path.join(folder, f)
         image = cv2.imread(image_path, cv2.IMREAD_UNCHANGED)
         process_single_image(image, iterator=iterator)
         iterator +=1
