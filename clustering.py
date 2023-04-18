@@ -94,9 +94,7 @@ def segment(image, df_mean_color, contours, filename, iterator):
         if mean_value > 50:
             print("Good image detected - saving.")
             # export image
-            cv2.imwrite(f"results/clustered/segmented_{filename}.png", img)
-            # if we detect one good segment, we dont need to look at the others
-            break
+            cv2.imwrite(f"clustered/segmented_{filename}", img)
 
         else:
             print("Bad image detected.")
@@ -110,20 +108,22 @@ def segment(image, df_mean_color, contours, filename, iterator):
     plt.figure(figsize=(20, 20))
 
 
-
 def process_single_image(image, iterator):
+    try:
+        contours, _ = find_contours(image)
 
-    contours, _ = find_contours(image)
+        # pass output to get_filtered_contours
+        # function is currently only used to get df_mean_color - not doing anything with filtered contours
+        df_mean_color, filtered_contours = get_filtered_contours(image, contours)
 
-    # pass output to get_filtered_contours
-    # function is currently only used to get df_mean_color - not doing anything with filtered contours
-    df_mean_color, filtered_contours = get_filtered_contours(image, contours)
+        df_mean_color = cluster(df_mean_color, n_clusters=3)
 
-    df_mean_color = cluster(df_mean_color, n_clusters=3)
+        # segmentation step
+        # passing in filtered contours gives list index out of range error
+        segment(image, df_mean_color, contours, filename, iterator=0)
+    except:
+        pass
 
-    # segmentation step
-    # passing in filtered contours gives list index out of range error
-    segment(image, df_mean_color, contours, filename, iterator=0)
 
 def process_folder(folder):
     iterator = 0
@@ -132,7 +132,8 @@ def process_folder(folder):
         image_path = os.path.join(folder, f)
         image = cv2.imread(image_path, cv2.IMREAD_UNCHANGED)
         process_single_image(image, iterator=iterator)
-        iterator +=1
+        iterator += 1
+
 
 def get_filetype(filename):
     """Determines the type of a given file
@@ -150,6 +151,10 @@ def get_filetype(filename):
 
 
 if __name__ == "__main__":
+    # if no folder called results/clustered exists, create it
+    if not os.path.exists("clustered/"):
+        os.makedirs("clustered/")
+
     # take first element in argv as image path
     if len(sys.argv) != 2:
         print("Incorrect number of arguments")
@@ -157,24 +162,25 @@ if __name__ == "__main__":
 
     image_path = sys.argv[1]
     filename = os.path.basename(image_path)
+    print(f"filename is: {image_path}")
 
     # If a file is passed as an argument, get the file type. Will help us know what to do with the file
     if image_path:
-        filetype = get_filetype(filename)
-        print("makes it here")
+        filetype = get_filetype(image_path)
+        print(f"filetype is {filetype}")
 
         if filetype is None:
-            #print("File does not exist or file of wrong type passed")
-            #sys.exit(1)
-            pass
+            print("File does not exist or file of wrong type passed")
+            sys.exit(1)
 
-        #print(sys.argv[1])  # debug
-        #print(filetype)  # debug
+        # print(sys.argv[1])  # debug
+        # print(filetype)  # debug
 
+    if filetype == "dir":
+        print("Processing folder")
+        process_folder(image_path)
 
-    image = cv2.imread(image_path, cv2.IMREAD_UNCHANGED)
-    # image = cv2.imread(
-    #    r"C:\Users\abzdel\Desktop\projects\rainforest\frames6\frame_1282.8069963948042.png",
-    #    cv2.IMREAD_UNCHANGED,
-    # )  # method 3 experiments section figure 3
-
+    else:
+        print("Processing single image")
+        image = cv2.imread(image_path, cv2.IMREAD_UNCHANGED)
+        process_single_image(image, iterator=0)
