@@ -75,6 +75,7 @@ def cluster(df_mean_color, n_clusters=3):
 def segment(image, df_mean_color, contours, filename, iterator):
     img = image.copy()
     for label, df_grouped in df_mean_color.groupby("label"):
+        good_flag = 0
         masked_image = draw_segmented_objects(image, contours, df_grouped.index)
         img = cv2.hconcat([img, masked_image])
         # 'masked image' here are the actual clusters
@@ -93,11 +94,14 @@ def segment(image, df_mean_color, contours, filename, iterator):
         print(f"mean value: {mean_value}")
         if mean_value > 50:
             print("Good image detected - saving.")
-            # export image
-            cv2.imwrite(f"clustered/segmented_{filename}", img)
+            good_flag = 1
 
         else:
             print("Bad image detected.")
+
+        if good_flag == 1:
+            # export image
+            cv2.imwrite(f"clustered/segmented_{filename}", img)
 
     # increase size of plot
     plt.figure(figsize=(20, 20))
@@ -145,6 +149,11 @@ def get_filetype(filename):
     elif os.path.isfile(filename):
         # split filename then return after .
         print(f"filetype is: {filename[-4:]}")
+
+        if filename[-4:] == ".mp4":
+            print("filetype is mp4 - need to run sample frames on this first")
+            sys.exit(1)
+
         return filename[-4:]
     else:
         return None

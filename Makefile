@@ -7,8 +7,7 @@ format:
 	black *.py
 
 test:
-	#python -m pytest -vv tests/test_*.py
-	echo "not yet implemented"
+	python -m pytest -vv test/test-*.py
 
 lint:
 	pylint --disable=R,C *.py
